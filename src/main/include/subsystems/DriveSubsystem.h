@@ -39,7 +39,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
    * @param rot the commanded rotation
    */
   void ArcadeDrive(double fwd, double rot);
-
+  
   /**
    * Controls each side of the drive directly with a voltage.
    *
@@ -168,14 +168,14 @@ class DriveSubsystem : public frc2::SubsystemBase {
   // The robot's drive
   frc::DifferentialDrive m_drive{m_leftMotors, m_rightMotors};
 
-  // The left-side drive encoder
+  // The left-side drive encoder 54.5lbs
   // frc::Encoder m_leftEncoder;
 
   // The right-side drive encoder
   // frc::Encoder m_rightEncoder;
 
   // The gyro sensor
-  AHRS m_gyro{frc::SerialPort::kUSB};
+  AHRS m_gyro{frc::I2C::kOnboard};
 
 
   // Odometry class for tracking robot pose

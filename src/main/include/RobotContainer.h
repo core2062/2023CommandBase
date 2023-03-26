@@ -18,6 +18,7 @@
 #include "commands/IntakeInCommand.h"
 #include "commands/IntakeOffCommand.h"
 #include "commands/IntakeOutCommand.h"
+#include "commands/AutoBalanceCommand.h"
 
 
 /**

@@ -42,6 +42,12 @@ void RobotContainer::ConfigureButtonBindings() {
       .OnTrue(&m_driveHalfSpeed)
       .OnFalse(&m_driveFullSpeed);
 
+  frc2::JoystickButton{&m_driverController, 4}
+    .OnTrue(new AutoBalanceCommand(&m_drive,1));
+
+  frc2::JoystickButton{&m_driverController, 3}
+    .OnTrue(new AutoBalanceCommand(&m_drive,2));
+
   // (frc2::JoystickButton(&m_operatorController,7) || frc2::JoystickButton(&m_operatorController,5))
   //   .OnFalse(new IntakeOffCommand(&m_intake));
 
