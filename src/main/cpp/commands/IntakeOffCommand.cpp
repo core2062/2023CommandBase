@@ -11,5 +11,5 @@ IntakeOffCommand::IntakeOffCommand(IntakeSubsystem* subsystem)
 }
 
 void IntakeOffCommand::Execute() {
-  m_subsystem->SetIntakeMotor(0);
+  m_subsystem->SetIntakeMotor(IntakeDirection::OFF);
 }

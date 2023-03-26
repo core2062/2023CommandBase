@@ -11,5 +11,5 @@ IntakeOutCommand::IntakeOutCommand(IntakeSubsystem* subsystem)
 }
 
 void IntakeOutCommand::Execute() {
-  m_subsystem->SetIntakeMotor(-1);
+  m_subsystem->SetIntakeMotor(IntakeDirection::OUT);
 }

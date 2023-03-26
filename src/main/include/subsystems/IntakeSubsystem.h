@@ -6,9 +6,14 @@
 
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/Phoenix.h>
 
 #include "Constants.h"
+
+enum class IntakeDirection {OFF, IN, OUT};
+
+using namespace frc;
 
 class IntakeSubsystem : public frc2::SubsystemBase {
  public:
@@ -30,10 +35,13 @@ class IntakeSubsystem : public frc2::SubsystemBase {
    */
   void SimulationPeriodic() override;
 
-  void SetIntakeMotor(double speed);
+  void SetIntakeMotor(IntakeDirection direction);
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
   WPI_TalonSRX m_intakeMotor{5};
+
+  double m_intakeSpeed;
+  bool m_intakeUp;
 };

@@ -53,6 +53,11 @@ void DriveSubsystem::Periodic() {
   m_odometry.Update(m_gyro.GetRotation2d(),
                   NativeUnitsToDistanceMeters(m_leftPrimary.GetSelectedSensorPosition(0)),
                   NativeUnitsToDistanceMeters(m_rightSecondary.GetSelectedSensorPosition(0)));
+
+  frc::SmartDashboard::PutNumber("Compass heading",m_gyro.GetCompassHeading());
+  frc::SmartDashboard::PutNumber("The pitch",m_gyro.GetPitch());
+  frc::SmartDashboard::PutNumber("The roll",m_gyro.GetRoll());
+  frc::SmartDashboard::PutNumber("The yaw",m_gyro.GetYaw());
 }
 
 void DriveSubsystem::ArcadeDrive(double fwd, double rot) {
@@ -111,9 +116,25 @@ void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
                            NativeUnitsToDistanceMeters(m_rightPrimary.GetSelectedSensorPosition(0)), pose);
 }
 
+void DriveSubsystem::SetNeutralMode(NeutralMode neutralMode) {
+  m_rightPrimary.SetNeutralMode(neutralMode);
+  m_rightSecondary.SetNeutralMode(neutralMode);
+  m_leftPrimary.SetNeutralMode(neutralMode);
+  m_leftSecondary.SetNeutralMode(neutralMode);
+}
+
 units::meter_t DriveSubsystem::NativeUnitsToDistanceMeters(double sensorCounts){
 	double motorRotations = (double)sensorCounts / kEncoderCPR;
 	double wheelRotations = motorRotations / kGearRatio;
 	units::meter_t position = units::meter_t{wheelRotations * (std::numbers::pi * kWheelDiameter)};
 	return position;
+}
+
+double DriveSubsystem::GetAngle() {
+  return m_gyro.GetRoll();
+}
+
+//TODO: Implement pref. to select NavX type
+bool DriveSubsystem::IsLevel() {
+  return abs(m_gyro.GetRoll()) < 1;
 }

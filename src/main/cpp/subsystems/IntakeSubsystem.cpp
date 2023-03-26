@@ -8,6 +8,7 @@ using namespace DriveConstants;
 
 IntakeSubsystem::IntakeSubsystem() : m_intakeMotor{kIntakeMotorPort} {
   // Implementation of subsystem constructor goes here.
+  m_intakeSpeed = 0.5;
 }
 
 frc2::CommandPtr IntakeSubsystem::IntakeMethodCommand() {
@@ -18,12 +19,23 @@ frc2::CommandPtr IntakeSubsystem::IntakeMethodCommand() {
 
 void IntakeSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
+  SmartDashboard::PutBoolean("Intake Up",m_intakeUp);
 }
 
 void IntakeSubsystem::SimulationPeriodic() {
   // Implementation of subsystem simulation periodic method goes here.
 }
 
-void IntakeSubsystem::SetIntakeMotor(double speed){
-    m_intakeMotor.Set(ControlMode::PercentOutput,speed);
+void IntakeSubsystem::SetIntakeMotor(IntakeDirection direction){
+  switch (direction)
+  {
+  case IntakeDirection::OUT:
+    m_intakeMotor.Set(ControlMode::PercentOutput,m_intakeSpeed);
+    break;
+  case IntakeDirection::IN:
+    m_intakeMotor.Set(ControlMode::PercentOutput,m_intakeSpeed*-1);
+  default:
+    m_intakeMotor.Set(ControlMode::PercentOutput,0);
+    break;
+  }
 }

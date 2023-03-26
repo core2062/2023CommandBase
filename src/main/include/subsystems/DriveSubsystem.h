@@ -11,6 +11,7 @@
 #include <frc/kinematics/DifferentialDriveOdometry.h>
 #include <frc/motorcontrol/MotorControllerGroup.h>
 #include <frc/motorcontrol/PWMSparkMax.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/SubsystemBase.h>
 #include <units/voltage.h>
 #include <ctre/Phoenix.h>
@@ -19,7 +20,6 @@
 
 #include "Constants.h"
 
-enum class DriveSide{LEFT = 1, RIGHT = 2, BOTH = 3};
 
 class DriveSubsystem : public frc2::SubsystemBase {
  public:
@@ -118,11 +118,32 @@ class DriveSubsystem : public frc2::SubsystemBase {
   void ResetOdometry(frc::Pose2d pose);
 
   /**
+   * Sets the neutral mode of the motor controllers
+   * 
+   * @param neutralMode Mode that you want to set the motors to
+  */
+  void SetNeutralMode(NeutralMode neutralMode);
+
+  /**
    * Gets the distance driven in meters
    * 
    * @param sensorCounts Then encoder value
   */
   units::meter_t NativeUnitsToDistanceMeters(double sensorCounts);
+
+  /**
+   * Gets the current angle of the robot
+   * 
+   * @return Returns either the pitch, or the roll based on which NavX is in use
+  */
+  double GetAngle();
+
+  /**
+   * Returns true when robot is level
+   * 
+   * @return Whether or not the robot is level
+  */
+  bool IsLevel();
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be

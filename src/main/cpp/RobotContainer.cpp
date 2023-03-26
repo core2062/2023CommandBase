@@ -29,7 +29,7 @@ RobotContainer::RobotContainer() {
   m_drive.SetDefaultCommand(frc2::RunCommand(
       [this] {// TODO: Figure out which axis on controller are actually being used (they should actually be correct)
         m_drive.ArcadeDrive(-m_driverController.GetRawAxis(1), // Left Y
-                            -m_driverController.GetRawAxis(2)); // Right X
+                            -m_driverController.GetRawAxis(4)); // Right X
       },
       {&m_drive}));
 }
@@ -42,14 +42,14 @@ void RobotContainer::ConfigureButtonBindings() {
       .OnTrue(&m_driveHalfSpeed)
       .OnFalse(&m_driveFullSpeed);
 
-  (frc2::JoystickButton(&m_operatorController,7) || frc2::JoystickButton(&m_operatorController,5))
-    .OnFalse(new IntakeOffCommand(&m_intake));
+  // (frc2::JoystickButton(&m_operatorController,7) || frc2::JoystickButton(&m_operatorController,5))
+  //   .OnFalse(new IntakeOffCommand(&m_intake));
 
-  frc2::JoystickButton(&m_operatorController,7)
-    .OnTrue(new IntakeOutCommand(&m_intake));
+  // frc2::JoystickButton(&m_operatorController,7)
+  //   .OnTrue(new IntakeOutCommand(&m_intake));
 
-  frc2::JoystickButton(&m_operatorController,5)
-    .OnTrue(new IntakeInCommand(&m_intake));
+  // frc2::JoystickButton(&m_operatorController,5)
+  //   .OnTrue(new IntakeInCommand(&m_intake));
 }
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {
