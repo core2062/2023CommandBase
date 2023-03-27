@@ -25,11 +25,17 @@
  */
 
 namespace DriveConstants {
-constexpr int kLeftMotor1Port = 3;
-constexpr int kLeftMotor2Port = 4;
+constexpr int kLeftMotor1Port = 4;
+constexpr int kLeftMotor2Port = 5;
+constexpr int kLeftMotor3Port = 6;
 constexpr int kRightMotor1Port = 1;
 constexpr int kRightMotor2Port = 2;
-constexpr int kIntakeMotorPort = 5;
+constexpr int kRightMotor3Port = 3;
+constexpr int kIntakeLowerMotorPort = 7;
+constexpr int kIntakeUpperMotorPort = 8;
+
+constexpr int kIntakeSolenoidIn = 0;
+constexpr int kIntakeSolenoidOut = 1;
 
 // constexpr int kLeftEncoderPorts[]{0, 1};
 // constexpr int kRightEncoderPorts[]{2, 3};

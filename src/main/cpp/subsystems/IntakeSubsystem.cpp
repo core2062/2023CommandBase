@@ -6,9 +6,16 @@
 
 using namespace DriveConstants;
 
-IntakeSubsystem::IntakeSubsystem() : m_intakeMotor{kIntakeMotorPort} {
+IntakeSubsystem::IntakeSubsystem() : m_intakeUpperMotor(kIntakeUpperMotorPort),
+                                     m_intakeLowerMotor(kIntakeLowerMotorPort),
+                                     m_intakeSolenoid(PneumaticsModuleType::REVPH,kIntakeSolenoidIn,kIntakeSolenoidOut) {
   // Implementation of subsystem constructor goes here.
-  m_intakeSpeed = 0.5;
+  m_intakeSpeed = 0;
+
+  m_intakeLowerMotor.SetInverted(true);
+  m_intakeLowerMotor.Follow(m_intakeUpperMotor);
+
+  m_intakeUpperMotor.Set(ControlMode::PercentOutput,0);
 }
 
 frc2::CommandPtr IntakeSubsystem::IntakeMethodCommand() {
@@ -26,16 +33,10 @@ void IntakeSubsystem::SimulationPeriodic() {
   // Implementation of subsystem simulation periodic method goes here.
 }
 
-void IntakeSubsystem::SetIntakeMotor(IntakeDirection direction){
-  switch (direction)
-  {
-  case IntakeDirection::OUT:
-    m_intakeMotor.Set(ControlMode::PercentOutput,m_intakeSpeed);
-    break;
-  case IntakeDirection::IN:
-    m_intakeMotor.Set(ControlMode::PercentOutput,m_intakeSpeed*-1);
-  default:
-    m_intakeMotor.Set(ControlMode::PercentOutput,0);
-    break;
-  }
+void IntakeSubsystem::SetIntakeMotors(double speed){
+  m_intakeUpperMotor.Set(ControlMode::PercentOutput,speed);  
+}
+
+void IntakeSubsystem::SetIntakeSolenoid(DoubleSolenoid::Value value) {
+  m_intakeSolenoid.Set(value);
 }

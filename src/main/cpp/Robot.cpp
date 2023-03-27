@@ -53,6 +53,8 @@ void Robot::TeleopInit() {
     m_autonomousCommand->Cancel();
     m_autonomousCommand = nullptr;
   }
+  m_compressor.EnableDigital();
+  std::cout << "TeleopInit" << std::endl;
 }
 
 /**

@@ -12,13 +12,15 @@
 #include <frc2/command/PIDCommand.h>
 #include <frc2/command/ParallelRaceGroup.h>
 #include <frc2/command/RunCommand.h>
+#include <frc2/command/StartEndCommand.h>
+#include <frc/Compressor.h>
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
-#include "commands/IntakeInCommand.h"
-#include "commands/IntakeOffCommand.h"
-#include "commands/IntakeOutCommand.h"
+#include "subsystems/IntakeSubsystem.h"
+
 #include "commands/AutoBalanceCommand.h"
+#include "commands/IntakeSpeedCommand.h"
 
 
 /**
@@ -50,9 +52,16 @@ class RobotContainer {
                                         {}};
   frc2::InstantCommand m_driveFullSpeed{[this] { m_drive.SetMaxOutput(1); },
                                         {}};
-
+                                        
+  frc2::StartEndCommand m_intakePositionToggle{[&] { m_intake.SetIntakeSolenoid(DoubleSolenoid::kForward); },
+                                               [&] { m_intake.SetIntakeSolenoid(DoubleSolenoid::kReverse); },
+                                                {&m_intake}};
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;
+  
+
 
   void ConfigureButtonBindings();
+  
+  // Compressor m_compressor;
 };

@@ -7,6 +7,7 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/DoubleSolenoid.h>
 #include <ctre/Phoenix.h>
 
 #include "Constants.h"
@@ -35,12 +36,17 @@ class IntakeSubsystem : public frc2::SubsystemBase {
    */
   void SimulationPeriodic() override;
 
-  void SetIntakeMotor(IntakeDirection direction);
+  void SetIntakeMotors(double speed);
+
+  void SetIntakeSolenoid(DoubleSolenoid::Value value);
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
-  WPI_TalonSRX m_intakeMotor{5};
+  WPI_TalonSRX m_intakeUpperMotor;
+  WPI_TalonSRX m_intakeLowerMotor;
+
+  DoubleSolenoid m_intakeSolenoid;
 
   double m_intakeSpeed;
   bool m_intakeUp;

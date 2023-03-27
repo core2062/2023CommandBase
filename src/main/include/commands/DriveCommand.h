@@ -6,8 +6,9 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
+#include <frc/controller/PIDController.h>
 
-#include "subsystems/IntakeSubsystem.h"
+#include "subsystems/DriveSubsystem.h"
 
 /**
  * An example command that uses an example subsystem.
@@ -16,18 +17,25 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class IntakeInCommand
-    : public frc2::CommandHelper<frc2::CommandBase, IntakeInCommand> {
+class DriveCommand
+    : public frc2::CommandHelper<frc2::CommandBase, DriveCommand> {
  public:
   /**
-   * Creates a new ExampleCommand.
+   * Creates a new DriveCommand.
    *
-   * @param subsystem The subsystem used by this command.
+   * @param driveSubsystem The subsystem used by this command.
    */
-  explicit IntakeInCommand(IntakeSubsystem* subsystem);
+  explicit DriveCommand(DriveSubsystem* driveSubsystem, double distance);
+
+  void Initialize() override;
 
   void Execute() override;
 
+  void End(bool interrupted) override;
+
+  bool IsFinished() override;
+
  private:
-  IntakeSubsystem* m_subsystem;
+  DriveSubsystem* m_driveSubsystem;
+  double m_distance;
 };

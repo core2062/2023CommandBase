@@ -12,8 +12,10 @@ using namespace DriveConstants;
 DriveSubsystem::DriveSubsystem()
     : m_leftPrimary{kLeftMotor1Port},
       m_leftSecondary{kLeftMotor2Port},
+      m_leftTertiary{kLeftMotor3Port},
       m_rightPrimary{kRightMotor1Port},
       m_rightSecondary{kRightMotor2Port},
+      m_rightTertiary{kRightMotor3Port},
       m_odometry{m_gyro.GetRotation2d(), units::meter_t{0}, units::meter_t{0}} {
   // We need to invert one side of the drivetrain so that positive voltages
   // result in both sides moving forward. Depending on how your robot's
@@ -21,16 +23,23 @@ DriveSubsystem::DriveSubsystem()
 
   m_leftPrimary.ConfigFactoryDefault();
   m_leftSecondary.ConfigFactoryDefault();
+  m_leftTertiary.ConfigFactoryDefault();
+
   m_rightPrimary.ConfigFactoryDefault();
   m_rightSecondary.ConfigFactoryDefault();
+  m_rightTertiary.ConfigFactoryDefault();
   // m_rightMotors.SetInverted(true);
 
   m_leftSecondary.Follow(m_leftPrimary);
   m_rightSecondary.Follow(m_rightPrimary);
+
+  m_leftTertiary.Follow(m_leftPrimary);
+  m_rightTertiary.Follow(m_rightPrimary);
   
   // Invert the correct side
   m_rightPrimary.SetInverted(true);
   m_rightSecondary.SetInverted(true);
+  m_rightTertiary.SetInverted(true);
 
   // configure the sensors
   m_leftPrimary.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,0, 10);
@@ -44,6 +53,8 @@ DriveSubsystem::DriveSubsystem()
   // This is handled by NativeUnitsToDistanceMeters
   // m_leftEncoder.SetDistancePerPulse(kEncoderDistancePerPulse);
   // m_rightEncoder.SetDistancePerPulse(kEncoderDistancePerPulse);
+
+  // m_compressor.EnableDigital();
 
   ResetEncoders();
 }
@@ -119,8 +130,10 @@ void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
 void DriveSubsystem::SetNeutralMode(NeutralMode neutralMode) {
   m_rightPrimary.SetNeutralMode(neutralMode);
   m_rightSecondary.SetNeutralMode(neutralMode);
+  m_rightTertiary.SetNeutralMode(neutralMode);
   m_leftPrimary.SetNeutralMode(neutralMode);
   m_leftSecondary.SetNeutralMode(neutralMode);
+  m_leftTertiary.SetNeutralMode(neutralMode);
 }
 
 units::meter_t DriveSubsystem::NativeUnitsToDistanceMeters(double sensorCounts){

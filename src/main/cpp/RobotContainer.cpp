@@ -22,6 +22,7 @@
 RobotContainer::RobotContainer() {
   // Initialize all of your commands and subsystems here
 
+
   // Configure the button bindings
   ConfigureButtonBindings();
 
@@ -48,17 +49,27 @@ void RobotContainer::ConfigureButtonBindings() {
   frc2::JoystickButton{&m_driverController, 3}
     .OnTrue(new AutoBalanceCommand(&m_drive,2));
 
-  // (frc2::JoystickButton(&m_operatorController,7) || frc2::JoystickButton(&m_operatorController,5))
-  //   .OnFalse(new IntakeOffCommand(&m_intake));
+  // frc2::JoystickButton{&m_operatorController,1} // A Button
+  //     .ToggleOnTrue(&m_intakePositionToggle); // Toggles intake position
 
-  // frc2::JoystickButton(&m_operatorController,7)
-  //   .OnTrue(new IntakeOutCommand(&m_intake));
+  (frc2::JoystickButton(&m_operatorController,2) || frc2::JoystickButton(&m_operatorController,3) || frc2::JoystickButton(&m_operatorController,4) || frc2::JoystickButton(&m_operatorController,6))
+    .OnFalse(new IntakeSpeedCommand(&m_intake,0));
 
-  // frc2::JoystickButton(&m_operatorController,5)
-  //   .OnTrue(new IntakeInCommand(&m_intake));
+  frc2::JoystickButton(&m_operatorController,4) // Y button
+    .OnTrue(new IntakeSpeedCommand(&m_intake,0.25)); // Score low
+
+  frc2::JoystickButton(&m_operatorController,3) // X Button
+    .OnTrue(new IntakeSpeedCommand(&m_intake,0.5)); // Score med
+
+  frc2::JoystickButton(&m_operatorController,2) // B Button
+    .OnTrue(new IntakeSpeedCommand(&m_intake,1)); // Score high
+
+  frc2::JoystickButton(&m_operatorController,6) // RB
+    .OnTrue(new IntakeSpeedCommand(&m_intake,-0.25)); // Intake in
 }
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {
+  /*
   // Create a voltage constraint to ensure we don't accelerate too fast
   frc::DifferentialDriveVoltageConstraint autoVoltageConstraint{
       frc::SimpleMotorFeedforward<units::meters>{
@@ -104,5 +115,7 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
   // no auto
   return new frc2::SequentialCommandGroup(
       std::move(ramseteCommand),
-      frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}));
+      frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {})); */
+  
+  return m_chooser.GetSelected();
 }

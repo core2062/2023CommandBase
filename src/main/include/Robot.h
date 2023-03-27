@@ -6,6 +6,7 @@
 
 #include <frc/TimedRobot.h>
 #include <frc2/command/Command.h>
+#include <frc/Compressor.h>
 
 #include "RobotContainer.h"
 
@@ -27,4 +28,5 @@ class Robot : public frc::TimedRobot {
   frc2::Command* m_autonomousCommand = nullptr;
 
   RobotContainer m_container;
+  Compressor m_compressor{frc::PneumaticsModuleType::REVPH};
 };

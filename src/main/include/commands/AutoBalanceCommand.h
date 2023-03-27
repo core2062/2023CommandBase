@@ -24,9 +24,9 @@ class AutoBalanceCommand
   /**
    * Creates a new AutoBalanceCommand.
    *
-   * @param subsystem The subsystem used by this command.
+   * @param driveSubsystem The subsystem used by this command.
    */
-  explicit AutoBalanceCommand(DriveSubsystem* subsystem,int stage);
+  explicit AutoBalanceCommand(DriveSubsystem* driveSubsystem,int stage);
 
   void Initialize() override; 
 
@@ -35,7 +35,7 @@ class AutoBalanceCommand
   bool IsFinished() override;
 
  private:
-  DriveSubsystem* m_subsystem;
+  DriveSubsystem* m_driveSubsystem;
   int m_stage;
   frc::PIDController m_balancePIDController;
 

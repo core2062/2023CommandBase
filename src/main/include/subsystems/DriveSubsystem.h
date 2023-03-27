@@ -17,9 +17,11 @@
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
 #include <ctre/phoenix/motorcontrol/GroupMotorControllers.h>
+#include <frc/Compressor.h>
 
 #include "Constants.h"
 
+using namespace frc;
 
 class DriveSubsystem : public frc2::SubsystemBase {
  public:
@@ -154,16 +156,19 @@ class DriveSubsystem : public frc2::SubsystemBase {
   // frc::PWMSparkMax m_leftSecondary;
   // frc::PWMSparkMax m_rightPrimary;
   // frc::PWMSparkMax m_rightSecondary;
-  WPI_TalonSRX m_leftPrimary{3};
-  WPI_TalonSRX m_leftSecondary{4};
-  WPI_TalonSRX m_rightPrimary{1};
-  WPI_TalonSRX m_rightSecondary{2};
+  WPI_TalonFX m_leftPrimary{4};
+  WPI_TalonFX m_leftSecondary{5};
+  WPI_TalonFX m_leftTertiary{6};
+
+  WPI_TalonFX m_rightPrimary{1};
+  WPI_TalonFX m_rightSecondary{2};
+  WPI_TalonFX m_rightTertiary{3};
 
   // The motors on the left side of the drive
-  frc::MotorControllerGroup m_leftMotors{m_leftPrimary, m_leftSecondary};
+  frc::MotorControllerGroup m_leftMotors{m_leftPrimary, m_leftSecondary, m_leftTertiary};
 
   // The motors on the right side of the drive
-  frc::MotorControllerGroup m_rightMotors{m_rightPrimary, m_rightSecondary};
+  frc::MotorControllerGroup m_rightMotors{m_rightPrimary, m_rightSecondary, m_rightTertiary};
 
   // The robot's drive
   frc::DifferentialDrive m_drive{m_leftMotors, m_rightMotors};
@@ -175,9 +180,11 @@ class DriveSubsystem : public frc2::SubsystemBase {
   // frc::Encoder m_rightEncoder;
 
   // The gyro sensor
-  AHRS m_gyro{frc::I2C::kOnboard};
+  AHRS m_gyro{frc::SerialPort::kUSB};
 
 
   // Odometry class for tracking robot pose
   frc::DifferentialDriveOdometry m_odometry;
+
+  // Compressor m_compressor;
 };
