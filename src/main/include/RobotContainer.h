@@ -21,7 +21,7 @@
 
 #include "commands/AutoBalanceCommand.h"
 #include "commands/IntakeSpeedCommand.h"
-
+#include "commands/DriveCommand.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since

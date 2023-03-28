@@ -43,11 +43,11 @@ constexpr int kIntakeSolenoidOut = 1;
 // constexpr bool kRightEncoderReversed = true;
 
 // TODO: determine track Width
-constexpr auto kTrackwidth = 0.6096_m;
+constexpr auto kTrackwidth = 0.577_m;
 extern const frc::DifferentialDriveKinematics kDriveKinematics;
 
-constexpr int kEncoderCPR = 2049;
-constexpr double kGearRatio = 12.86; // 12.86:1 ratio
+constexpr int kEncoderCPR = 2048;
+constexpr double kGearRatio = 12.27; // 12.27:1 ratio
 constexpr double kWheelDiameter = static_cast<double>(0.1524_m);
 // TODO: Calculate kEncoderDistancePerPulse
 // constexpr double kEncoderDistancePerPulse =
@@ -62,9 +62,9 @@ constexpr double kEncoderDistancePerPulse =
 // theoretically for *your* robot's drive. The Robot Characterization
 // Toolsuite provides a convenient tool for obtaining these values for your
 // robot.
-constexpr auto ks = 0.30893_V;
-constexpr auto kv = 1.8004 * 1_V * 1_s / 1_m;
-constexpr auto ka = 0.29226 * 1_V * 1_s * 1_s / 1_m;
+constexpr auto ks = 0.057741_V;
+constexpr auto kv = 2.9135 * 1_V * 1_s / 1_m;
+constexpr auto ka = 0.14155 * 1_V * 1_s * 1_s / 1_m;
 
 // Example value only - as above, this must be tuned for your drive!
 constexpr double kPDriveVel = 0.13201;

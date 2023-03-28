@@ -42,8 +42,8 @@ DriveSubsystem::DriveSubsystem()
   m_rightTertiary.SetInverted(true);
 
   // configure the sensors
-  m_leftPrimary.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,0, 10);
-  m_rightPrimary.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,0, 10);
+  m_leftPrimary.ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor,0, 10);
+  m_rightPrimary.ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor,0, 10);
 
   // set the sensor value to track the forward (pos) and reverise(neg) of the controller
   m_rightPrimary.SetSensorPhase(true);
@@ -69,6 +69,8 @@ void DriveSubsystem::Periodic() {
   frc::SmartDashboard::PutNumber("The pitch",m_gyro.GetPitch());
   frc::SmartDashboard::PutNumber("The roll",m_gyro.GetRoll());
   frc::SmartDashboard::PutNumber("The yaw",m_gyro.GetYaw());
+  frc::SmartDashboard::PutNumber("Avg Meters",GetAverageEncoderDistance());
+  frc::SmartDashboard::PutNumber("Left side",m_leftPrimary.GetSelectedSensorPosition());
 }
 
 void DriveSubsystem::ArcadeDrive(double fwd, double rot) {

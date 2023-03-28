@@ -10,23 +10,24 @@ AutoBalanceCommand::AutoBalanceCommand(DriveSubsystem* driveSubsystem, int stage
       m_balancePIDController{0,0,0} {
   // Register that this command requires the subsystem.
   AddRequirements(m_driveSubsystem);
-  if (m_stage == 1){
-    kP = 0.02;
-  } else if (m_stage == 2) {
-    kP = 0.01;
-  }
-//   kP = 0.02;
-//   kI = 0;
-//   kD = 0;
+//   if (m_stage == 1){
+//     kP = 0.02;
+//   } else if (m_stage == 2) {
+//     kP = 0.01;
+//   }
+  kP = 0.02;
+  kI = 0;
+  kD = 0;
 }
 
 void AutoBalanceCommand::Initialize() {
+    m_driveSubsystem->SetMaxOutput(0.25);
     m_driveSubsystem->SetNeutralMode(NeutralMode::Brake);
     m_balancePIDController.SetPID(kP,kI,kD);
     m_balancePIDController.SetSetpoint(0);
     if (m_stage == 1)
     {
-        m_balancePIDController.SetTolerance(5);
+        m_balancePIDController.SetTolerance(6);
     }
     else if(m_stage == 2)
     {
@@ -43,7 +44,7 @@ void AutoBalanceCommand::Execute() {
     // std::cout << "SECOND STAGE!!!!!!! also the motor speed is: " << motorSpeed+0.1 << std::endl;
     if (m_stage == 1)
     {
-        m_driveSubsystem->ArcadeDrive(motorSpeed,0);
+        m_driveSubsystem->ArcadeDrive(motorSpeed*0.6,0);
     }
     else if(m_stage == 2)
     {
@@ -54,7 +55,7 @@ void AutoBalanceCommand::Execute() {
             motorSpeed -= 0.04;
         }
         
-        m_driveSubsystem->ArcadeDrive(motorSpeed,0);
+        m_driveSubsystem->ArcadeDrive(motorSpeed*0.8,0);
     }
 }
 

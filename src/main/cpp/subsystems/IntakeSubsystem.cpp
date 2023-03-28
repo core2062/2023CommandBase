@@ -16,6 +16,7 @@ IntakeSubsystem::IntakeSubsystem() : m_intakeUpperMotor(kIntakeUpperMotorPort),
   m_intakeLowerMotor.Follow(m_intakeUpperMotor);
 
   m_intakeUpperMotor.Set(ControlMode::PercentOutput,0);
+  m_intakeSolenoid.Set(DoubleSolenoid::kReverse);
 }
 
 frc2::CommandPtr IntakeSubsystem::IntakeMethodCommand() {

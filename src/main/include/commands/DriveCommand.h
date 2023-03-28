@@ -7,6 +7,7 @@
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
 #include <frc/controller/PIDController.h>
+#include <iostream>
 
 #include "subsystems/DriveSubsystem.h"
 
@@ -37,5 +38,10 @@ class DriveCommand
 
  private:
   DriveSubsystem* m_driveSubsystem;
-  double m_distance;
+
+  PIDController m_pidController;
+
+  double m_kP,m_kI,m_kD;
+
+  double m_distance, m_startingPos;
 };
