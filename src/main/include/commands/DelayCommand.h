@@ -4,15 +4,11 @@
 
 #pragma once
 
-#include <string>
-#include <iostream>
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
-#include <frc/controller/PIDController.h>
+#include <frc/Timer.h>
 
 #include "subsystems/DriveSubsystem.h"
-
-using namespace std;
 
 /**
  * An example command that uses an example subsystem.
@@ -21,26 +17,24 @@ using namespace std;
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class DriveCommand
-    : public frc2::CommandHelper<frc2::CommandBase, DriveCommand> {
+class DelayCommand
+    : public frc2::CommandHelper<frc2::CommandBase, DelayCommand> {
  public:
   /**
-   * Creates a new DriveCommand.
+   * Creates a new DelayCommand.
    *
-   * @param driveSubsystem The subsystem used by this command.
+   * @param subsystem The subsystem used by this command.
    */
-  explicit DriveCommand(DriveSubsystem* driveSubsystem, string pathName);
+  explicit DelayCommand(DriveSubsystem* drive,units::time::second_t time);
 
   void Initialize() override;
 
   void Execute() override;
-
-  void End(bool interrupted) override;
-
+  
   bool IsFinished() override;
 
  private:
-  DriveSubsystem* m_driveSubsystem;
-
-  string m_pathName;
+  DriveSubsystem* m_drive;
+  units::time::second_t m_time;
+  frc::Timer m_timer;
 };

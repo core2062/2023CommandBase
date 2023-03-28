@@ -71,6 +71,7 @@ void DriveSubsystem::Periodic() {
   frc::SmartDashboard::PutNumber("The yaw",m_gyro.GetYaw());
   frc::SmartDashboard::PutNumber("Avg Meters",GetAverageEncoderDistance());
   frc::SmartDashboard::PutNumber("Left side",m_leftPrimary.GetSelectedSensorPosition());
+  
 }
 
 void DriveSubsystem::ArcadeDrive(double fwd, double rot) {
@@ -130,6 +131,8 @@ void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
 }
 
 void DriveSubsystem::SetNeutralMode(NeutralMode neutralMode) {
+  std::cout << "Setting neutral mode" << std::endl;
+
   m_rightPrimary.SetNeutralMode(neutralMode);
   m_rightSecondary.SetNeutralMode(neutralMode);
   m_rightTertiary.SetNeutralMode(neutralMode);

@@ -21,6 +21,7 @@ AutoBalanceCommand::AutoBalanceCommand(DriveSubsystem* driveSubsystem, int stage
 }
 
 void AutoBalanceCommand::Initialize() {
+    std::cout << "beginning to balance" << std::endl;
     m_driveSubsystem->SetMaxOutput(0.25);
     m_driveSubsystem->SetNeutralMode(NeutralMode::Brake);
     m_balancePIDController.SetPID(kP,kI,kD);
@@ -41,7 +42,6 @@ void AutoBalanceCommand::Execute() {
     double motorSpeed = m_balancePIDController.Calculate(currAngle);
     frc::SmartDashboard::PutNumber("Current Error",m_balancePIDController.GetPositionError());
     frc::SmartDashboard::PutNumber("Balance Speed",motorSpeed);
-    // std::cout << "SECOND STAGE!!!!!!! also the motor speed is: " << motorSpeed+0.1 << std::endl;
     if (m_stage == 1)
     {
         m_driveSubsystem->ArcadeDrive(motorSpeed*0.6,0);
