@@ -6,6 +6,7 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
+#include <frc/Timer.h>
 
 #include "subsystems/IntakeSubsystem.h"
 
@@ -26,9 +27,18 @@ class IntakeSpeedCommand
    */
   explicit IntakeSpeedCommand(IntakeSubsystem* intakeSubsystem, double intakeSpeed);
   
+  explicit IntakeSpeedCommand(IntakeSubsystem* intakeSubsystem, double intakeSpeed, double timeout);
+  
+  void Initialize() override;
+
   void Execute() override;
+
+  void End(bool interrupted) override;
+
+  bool IsFinished() override;
 
  private:
   IntakeSubsystem* m_intakeSubsystem;
-  double m_intakeSpeed;
+  frc::Timer m_timer;
+  double m_intakeSpeed, m_timeout;
 };

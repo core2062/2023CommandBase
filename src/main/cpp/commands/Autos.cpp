@@ -16,7 +16,11 @@ frc2::CommandPtr autos::ExampleAuto(ExampleSubsystem* subsystem) {
 }
 
 // frc2::CommandPtr autos::AutoBalanceAuto(DriveSubsystem* m_driveSubsystem) {
-//   frc2::RamseteCommand* ramseteCommand = &RobotContainer::GetMoveBackCommand()
 
-//   return frc2::cmd::Sequence();
+//   return new frc2::cmd::Sequence(std::move(&RobotContainer::GetRamseteCommand("BlueMoveBack.wpilib.json")),
+//       frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}),
+//       std::move(AutoBalanceCommand{&m_drive,1}),
+//       std::move(DelayCommand(&m_drive,1.0_s)),
+//       std::move(AutoBalanceCommand{&m_drive,2}),
+//       frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}));
 // }

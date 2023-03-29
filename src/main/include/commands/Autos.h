@@ -10,6 +10,7 @@
 #include "subsystems/ExampleSubsystem.h"
 #include "subsystems/DriveSubsystem.h"
 
+#include "Robot.h"
 #include "RobotContainer.h"
 
 using namespace AutoConstants;
@@ -21,7 +22,7 @@ namespace autos {
 frc2::CommandPtr ExampleAuto(ExampleSubsystem* subsystem);
 
 /**
- * Example static factory for an autonomous command.
+ * 
  */
 // frc2::CommandPtr AutoBalanceAuto(DriveSubsystem* m_driveSubsystem);
 

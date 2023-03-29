@@ -5,8 +5,7 @@
 #include "commands/DelayCommand.h"
 
 DelayCommand::DelayCommand(DriveSubsystem* drive, units::time::second_t time)
-    : m_time{time},
-      m_drive{drive} {
+    : m_time{time} {
   // Register that this command requires the subsystem.
 }
 
@@ -15,7 +14,6 @@ void DelayCommand::Initialize() {
 }
 
 void DelayCommand::Execute() {
-  m_drive->TankDriveVolts(0_V, 0_V);
 }
 
 bool DelayCommand::IsFinished() {

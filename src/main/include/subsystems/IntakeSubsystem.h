@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <iostream>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc/smartdashboard/SmartDashboard.h>
@@ -40,6 +41,8 @@ class IntakeSubsystem : public frc2::SubsystemBase {
 
   void SetIntakeSolenoid(DoubleSolenoid::Value value);
   
+  void ToggleIntakeSolenoid();
+
   void ToggleIntakeSolenoid();
 
  private:

@@ -4,8 +4,12 @@
 
 #pragma once
 
+#include <string>
+#include <iostream>
+
 #include <frc/XboxController.h>
 #include <frc/controller/PIDController.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/InstantCommand.h>
@@ -42,7 +46,15 @@ class RobotContainer {
 
   frc2::Command* GetAutonomousCommand();
 
-  // frc2::RamseteCommand* GetMoveBackCommand();
+  frc2::Command* GetRamseteCommand(string fileName);
+
+  void FeedWatchdog();
+
+  // Auton routines
+  frc2::Command* GetAutoBalanceRoutine();
+  frc2::Command* GetScoreMidAutoBalanceRoutine();
+  frc2::Command* GetScoreLowAutoBalanceRoutine();
+  frc2::Command* GetScoreMidMobilityRoutine();
 
  private:
   // The driver's controller
@@ -66,7 +78,6 @@ class RobotContainer {
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;
   
-
 
   void ConfigureButtonBindings();
   
