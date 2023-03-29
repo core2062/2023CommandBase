@@ -37,6 +37,7 @@ class AutoBalanceCommand
  private:
   DriveSubsystem* m_driveSubsystem;
   int m_stage;
+  bool isCommandFinished;
   frc::PIDController m_balancePIDController;
 
   double kP, kI, kD;

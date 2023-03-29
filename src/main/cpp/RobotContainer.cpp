@@ -43,11 +43,16 @@ void RobotContainer::ConfigureButtonBindings() {
       .OnTrue(&m_driveHalfSpeed)
       .OnFalse(&m_driveFullSpeed);
 
-  frc2::JoystickButton{&m_driverController, 4}
-    .OnTrue(new AutoBalanceCommand(&m_drive,1));
-
   frc2::JoystickButton{&m_driverController, 3}
-    .OnTrue(new AutoBalanceCommand(&m_drive,2));
+    .OnTrue(new AutoBalanceCommand(&m_drive,1))
+    .OnFalse(new AutoBalanceCommand(&m_drive,0));
+
+  frc2::JoystickButton{&m_driverController, 4}
+    .OnTrue(new AutoBalanceCommand(&m_drive,2))
+    .OnFalse(new AutoBalanceCommand(&m_drive,0));
+
+  // (frc2::JoystickButton{&m_driverController, 3} || frc2::JoystickButton{&m_driverController, 4})
+  //   .OnFalse(new AutoBalanceCommand(&m_drive,0));
 
   frc2::JoystickButton{&m_operatorController,1} // A Button
     .OnTrue(&m_intakePositionToggle); // Toggles intake position
@@ -59,7 +64,7 @@ void RobotContainer::ConfigureButtonBindings() {
     .OnTrue(new IntakeSpeedCommand(&m_intake,0.25)); // Score low
 
   frc2::JoystickButton(&m_operatorController,4) // X Button
-    .OnTrue(new IntakeSpeedCommand(&m_intake,0.5)); // Score med
+    .OnTrue(new IntakeSpeedCommand(&m_intake,0.6)); // Score med
 
   frc2::JoystickButton(&m_operatorController,2) // B Button
     .OnTrue(new IntakeSpeedCommand(&m_intake,1)); // Score high

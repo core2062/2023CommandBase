@@ -28,11 +28,16 @@ void AutoBalanceCommand::Initialize() {
     m_balancePIDController.SetSetpoint(0);
     if (m_stage == 1)
     {
-        m_balancePIDController.SetTolerance(6);
+        m_balancePIDController.SetTolerance(3);
+        isCommandFinished = false;
     }
     else if(m_stage == 2)
     {
         m_balancePIDController.SetTolerance(1);
+        isCommandFinished = false;
+    } else if(m_stage == 0)
+    {
+        isCommandFinished = true;
     }
     
 }
@@ -60,5 +65,12 @@ void AutoBalanceCommand::Execute() {
 }
 
 bool AutoBalanceCommand::IsFinished() {
-    return m_balancePIDController.AtSetpoint();
+    if (isCommandFinished == true) {
+        std::cout<<"is finished"<< std::endl;  
+        return true;
+    } else
+    {
+        std::cout<<"is finished"<< std::endl;  
+        return m_balancePIDController.AtSetpoint();
+    }
 }
