@@ -61,9 +61,8 @@ class RobotContainer {
   frc2::InstantCommand m_driveFullSpeed{[this] { m_drive.SetMaxOutput(1); },
                                         {}};
                                         
-  frc2::StartEndCommand m_intakePositionToggle{[&] { m_intake.SetIntakeSolenoid(DoubleSolenoid::kForward); },
-                                               [&] { m_intake.SetIntakeSolenoid(DoubleSolenoid::kReverse); },
-                                                {&m_intake}};
+  frc2::InstantCommand m_intakePositionToggle{[this] { m_intake.ToggleIntakeSolenoid(); },
+                                              {}};
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;
   

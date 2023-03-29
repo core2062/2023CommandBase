@@ -39,6 +39,8 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   void SetIntakeMotors(double speed);
 
   void SetIntakeSolenoid(DoubleSolenoid::Value value);
+  
+  void ToggleIntakeSolenoid();
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be

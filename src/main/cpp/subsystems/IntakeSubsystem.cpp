@@ -41,3 +41,7 @@ void IntakeSubsystem::SetIntakeMotors(double speed){
 void IntakeSubsystem::SetIntakeSolenoid(DoubleSolenoid::Value value) {
   m_intakeSolenoid.Set(value);
 }
+
+void IntakeSubsystem::ToggleIntakeSolenoid() {
+  m_intakeSolenoid.Toggle();
+}
