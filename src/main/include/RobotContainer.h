@@ -29,6 +29,14 @@
 #include "commands/DriveCommand.h"
 #include "commands/DelayCommand.h"
 
+enum class Autons {
+  DO_NOTHING,
+  AUTOBALANCE,
+  MOBILITY,
+  SCORE_AUTOBALANCE,
+  SCORE_MOBILITY
+};
+
 /**
  * This class is where the bulk of the robot should be declared.  Since
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -42,8 +50,15 @@ class RobotContainer {
 
   frc2::Command* GetAutonomousCommand();
 
-  // frc2::RamseteCommand* GetMoveBackCommand();
+  frc2::Command* GetRamseteCommand(string filename);
 
+  frc2::Command* GetScoreBalanceRoutine();
+  frc2::Command* GetAutoBalanceRoutine();
+  frc2::Command* GetAutoBalanceRoutine2();
+  frc2::Command* GetScoreMobilityRoutine();
+  frc2::Command* GetMobilityRoutine();
+
+  void Feed();
  private:
   // The driver's controller
   frc::GenericHID m_driverController{OIConstants::kDriverControllerPort};
@@ -65,6 +80,8 @@ class RobotContainer {
                                               {}};
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;
+  frc::SendableChooser<Autons> m_chooser2;
+  
   
 
 

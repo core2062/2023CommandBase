@@ -156,3 +156,7 @@ double DriveSubsystem::GetAngle() {
 bool DriveSubsystem::IsLevel() {
   return abs(m_gyro.GetRoll()) < 1;
 }
+
+void DriveSubsystem::Feed() {
+  m_drive.Feed();
+}

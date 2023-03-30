@@ -21,7 +21,18 @@
 
 RobotContainer::RobotContainer() {
   // Initialize all of your commands and subsystems here
+  // m_chooser.SetDefaultOption("Mobility Routine", GetMobilityRoutine());
+  // m_chooser.AddOption("Auto Balance Routine", GetAutoBalanceRoutine());
+  // m_chooser.SetDefaultOption("Score Balance Routine", GetScoreBalanceRoutine());
+  // m_chooser.AddOption("Score Mobility Routine", GetScoreMobilityRoutine());
+  // frc::SmartDashboard::PutData("Autonomous", &m_chooser); 
 
+  m_chooser2.SetDefaultOption("Do Nothing", Autons::DO_NOTHING);
+  m_chooser2.AddOption("Auto Balance", Autons::AUTOBALANCE);
+  m_chooser2.AddOption("Mobility", Autons::MOBILITY);
+  m_chooser2.AddOption("Score Balance", Autons::SCORE_AUTOBALANCE);
+  m_chooser2.AddOption("Score Mobility", Autons::SCORE_MOBILITY);
+  frc::SmartDashboard::PutData("Autonomous 2",&m_chooser2);
 
   // Configure the button bindings
   ConfigureButtonBindings();
@@ -39,7 +50,7 @@ void RobotContainer::ConfigureButtonBindings() {
   // Configure your button bindings here
 
   // While holding the shoulder button, drive at half speed
-  frc2::JoystickButton{&m_driverController, 6}
+  frc2::JoystickButton{&m_driverController, 5}
       .OnTrue(&m_driveHalfSpeed)
       .OnFalse(&m_driveFullSpeed);
 
@@ -78,32 +89,193 @@ void RobotContainer::ConfigureButtonBindings() {
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {
   
-  // Create a voltage constraint to ensure we don't accelerate too fast
+  // // Create a voltage constraint to ensure we don't accelerate too fast
+  // frc::DifferentialDriveVoltageConstraint autoVoltageConstraint{
+  //     frc::SimpleMotorFeedforward<units::meters>{
+  //         DriveConstants::ks, DriveConstants::kv, DriveConstants::ka},
+  //     DriveConstants::kDriveKinematics, 10_V};
+
+  // // Set up config for trajectory
+  // frc::TrajectoryConfig config{AutoConstants::kMaxSpeed,
+  //                              AutoConstants::kMaxAcceleration};
+  // // Add kinematics to ensure max speed is actually obeyed
+  // config.SetKinematics(DriveConstants::kDriveKinematics);
+  // // Apply the voltage constraint
+  // config.AddConstraint(autoVoltageConstraint);
+
+  // // An example trajectory to follow.  All units in meters.
+  // // auto exampleTrajectory = frc::TrajectoryGenerator::GenerateTrajectory(
+  // //     // Start at the origin facing the +X direction
+  // //     frc::Pose2d{0_m, 0_m, 0_deg},
+  // //     // Pass through these two interior waypoints, making an 's' curve path
+  // //     {frc::Translation2d{1_m, 1_m}, frc::Translation2d{2_m, -1_m}},
+  // //     // End 0.6 meters straight ahead of where we started, facing forward
+  // //     frc::Pose2d{3_m, 0_m, 0_deg},
+  // //     // Pass the config
+  // //     config);
+
+  
+  // fs::path deployDirectory = frc::filesystem::GetDeployDirectory();
+  // deployDirectory = deployDirectory / "paths" / "BlueMoveBack.wpilib.json";
+  // frc::Trajectory trajectory = frc::TrajectoryUtil::FromPathweaverJson(deployDirectory.string());
+
+  // frc2::RamseteCommand ramseteCommand{
+  //     trajectory,
+  //     [this]() { return m_drive.GetPose(); },
+  //     frc::RamseteController{AutoConstants::kRamseteB,
+  //                            AutoConstants::kRamseteZeta},
+  //     frc::SimpleMotorFeedforward<units::meters>{
+  //         DriveConstants::ks, DriveConstants::kv, DriveConstants::ka},
+  //     DriveConstants::kDriveKinematics,
+  //     [this] { return m_drive.GetWheelSpeeds(); },
+  //     frc2::PIDController{DriveConstants::kPDriveVel, 0, 0},
+  //     frc2::PIDController{DriveConstants::kPDriveVel, 0, 0},
+  //     [this](auto left, auto right) { m_drive.TankDriveVolts(left, right); },
+  //     {&m_drive}};
+
+  // // Reset odometry to the starting pose of the trajectory.
+  // m_drive.ResetOdometry(trajectory.InitialPose());
+  
+  // // no auto
+  // return new frc2::SequentialCommandGroup(
+  //     std::move(ramseteCommand),
+  //     frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}),
+  //     std::move(AutoBalanceCommand{&m_drive,1}),
+  //     std::move(DelayCommand(&m_drive,1.0_s)),
+  //     std::move(AutoBalanceCommand{&m_drive,2}),
+  //     frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}));
+
+  // return new frc2::SequentialCommandGroup(
+  //   frc2::InstantCommand([this] { m_drive.SetNeutralMode(NeutralMode::Brake); }, {}),
+  //   std::move(ramseteCommand),
+  //   frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {})); 
+  
+  // return m_chooser.GetSelected();
+
+  Autons choice = m_chooser2.GetSelected();
+  switch (choice)
+  {
+  case Autons::AUTOBALANCE:
+    return GetAutoBalanceRoutine();
+    break;
+  case Autons::SCORE_AUTOBALANCE:
+    return GetScoreBalanceRoutine();
+    break;
+  case Autons::SCORE_MOBILITY:
+    return GetScoreMobilityRoutine();
+    break;
+  case Autons::MOBILITY:
+    return GetMobilityRoutine();
+    break;
+  default:
+    return new frc2::SequentialCommandGroup(frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}));
+    break;
+  }
+}
+
+
+frc2::Command* RobotContainer::GetAutoBalanceRoutine() {
+  std::cout << "In GetAutoBalanceRoutine()" << endl;
+  fs::path deployDirectory = frc::filesystem::GetDeployDirectory();
+  deployDirectory = deployDirectory / "paths" / "BlueMoveBack.wpilib.json";
+  frc::Trajectory trajectory = frc::TrajectoryUtil::FromPathweaverJson(deployDirectory.string());
+
+  frc2::RamseteCommand ramseteCommand{
+      trajectory,
+      [this]() { return m_drive.GetPose(); },
+      frc::RamseteController{AutoConstants::kRamseteB,
+                             AutoConstants::kRamseteZeta},
+      frc::SimpleMotorFeedforward<units::meters>{
+          DriveConstants::ks, DriveConstants::kv, DriveConstants::ka},
+      DriveConstants::kDriveKinematics,
+      [this] { return m_drive.GetWheelSpeeds(); },
+      frc2::PIDController{DriveConstants::kPDriveVel, 0, 0},
+      frc2::PIDController{DriveConstants::kPDriveVel, 0, 0},
+      [this](auto left, auto right) { m_drive.TankDriveVolts(left, right);
+                                      std::cout << "Driving in autobalance" << std::endl; },
+      {&m_drive}};
+
+  // Reset odometry to the starting pose of the trajectory.
+  m_drive.ResetOdometry(trajectory.InitialPose());
+
+  // no auto
+  return new frc2::SequentialCommandGroup(
+
+  std::move(ramseteCommand),
+  frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}),
+  std::move(AutoBalanceCommand{&m_drive,1}),
+  std::move(DelayCommand(&m_drive,1.0_s)),
+  std::move(AutoBalanceCommand{&m_drive,2}),
+  frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}));
+
+
+  // return &ramseteCommand;
+}
+
+frc2::Command* RobotContainer::GetAutoBalanceRoutine2() {
+  // // Create a voltage constraint to ensure we don't accelerate too fast
   frc::DifferentialDriveVoltageConstraint autoVoltageConstraint{
       frc::SimpleMotorFeedforward<units::meters>{
           DriveConstants::ks, DriveConstants::kv, DriveConstants::ka},
       DriveConstants::kDriveKinematics, 10_V};
 
-  // Set up config for trajectory
+  // // Set up config for trajectory
   frc::TrajectoryConfig config{AutoConstants::kMaxSpeed,
                                AutoConstants::kMaxAcceleration};
-  // Add kinematics to ensure max speed is actually obeyed
+  // // Add kinematics to ensure max speed is actually obeyed
   config.SetKinematics(DriveConstants::kDriveKinematics);
   // Apply the voltage constraint
   config.AddConstraint(autoVoltageConstraint);
 
-  // An example trajectory to follow.  All units in meters.
-  // auto exampleTrajectory = frc::TrajectoryGenerator::GenerateTrajectory(
-  //     // Start at the origin facing the +X direction
-  //     frc::Pose2d{0_m, 0_m, 0_deg},
-  //     // Pass through these two interior waypoints, making an 's' curve path
-  //     {frc::Translation2d{1_m, 1_m}, frc::Translation2d{2_m, -1_m}},
-  //     // End 0.6 meters straight ahead of where we started, facing forward
-  //     frc::Pose2d{3_m, 0_m, 0_deg},
-  //     // Pass the config
-  //     config);
+  // // An example trajectory to follow.  All units in meters.
+  auto trajectory = frc::TrajectoryGenerator::GenerateTrajectory(
+      // Start at the origin facing the +X direction
+      frc::Pose2d{0_m, 0_m, 0_deg},
+      // Pass through these two interior waypoints, making an 's' curve path
+      {frc::Translation2d{1_m, 1_m}, frc::Translation2d{2_m, -1_m}},
+      // End 0.6 meters straight ahead of where we started, facing forward
+      frc::Pose2d{3_m, 0_m, 0_deg},
+      // Pass the config
+      config);
 
   
+  // fs::path deployDirectory = frc::filesystem::GetDeployDirectory();
+  // deployDirectory = deployDirectory / "paths" / "BlueMoveBack.wpilib.json";
+  // frc::Trajectory trajectory = frc::TrajectoryUtil::FromPathweaverJson(deployDirectory.string());
+
+  frc2::RamseteCommand ramseteCommand{
+      trajectory,
+      [this]() { return m_drive.GetPose(); },
+      frc::RamseteController{AutoConstants::kRamseteB,
+                             AutoConstants::kRamseteZeta},
+      frc::SimpleMotorFeedforward<units::meters>{
+          DriveConstants::ks, DriveConstants::kv, DriveConstants::ka},
+      DriveConstants::kDriveKinematics,
+      [this] { return m_drive.GetWheelSpeeds(); },
+      frc2::PIDController{DriveConstants::kPDriveVel, 0, 0},
+      frc2::PIDController{DriveConstants::kPDriveVel, 0, 0},
+      [this](auto left, auto right) { m_drive.TankDriveVolts(left, right); },
+      {&m_drive}};
+
+  // // Reset odometry to the starting pose of the trajectory.
+  m_drive.ResetOdometry(trajectory.InitialPose());
+  
+  // // no auto
+  return new frc2::SequentialCommandGroup(
+      std::move(ramseteCommand),
+      frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}),
+      std::move(AutoBalanceCommand{&m_drive,1}),
+      std::move(DelayCommand(&m_drive,1.0_s)),
+      std::move(AutoBalanceCommand{&m_drive,2}),
+      frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}));
+
+  // return new frc2::SequentialCommandGroup(
+  //   frc2::InstantCommand([this] { m_drive.SetNeutralMode(NeutralMode::Brake); }, {}),
+  //   std::move(ramseteCommand),
+  //   frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {})); 
+}
+
+frc2::Command* RobotContainer::GetScoreBalanceRoutine() {
   fs::path deployDirectory = frc::filesystem::GetDeployDirectory();
   deployDirectory = deployDirectory / "paths" / "BlueMoveBack.wpilib.json";
   frc::Trajectory trajectory = frc::TrajectoryUtil::FromPathweaverJson(deployDirectory.string());
@@ -124,45 +296,80 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
 
   // Reset odometry to the starting pose of the trajectory.
   m_drive.ResetOdometry(trajectory.InitialPose());
-  
-  // no auto
-  return new frc2::SequentialCommandGroup(
-      std::move(ramseteCommand),
-      frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}),
-      std::move(AutoBalanceCommand{&m_drive,1}),
-      std::move(DelayCommand(&m_drive,1.0_s)),
-      std::move(AutoBalanceCommand{&m_drive,2}),
-      frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}));
 
-  // return new frc2::SequentialCommandGroup(
-  //   frc2::InstantCommand([this] { m_drive.SetNeutralMode(NeutralMode::Brake); }, {}),
-  //   std::move(ramseteCommand),
-  //   frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {})); 
-  
-  // return m_chooser.GetSelected();
+  return new frc2::SequentialCommandGroup(
+    std::move(IntakeSpeedCommand(&m_intake, 1, 1)),
+    std::move(ramseteCommand),
+    frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}),
+    std::move(AutoBalanceCommand{&m_drive,1}),
+    std::move(DelayCommand(&m_drive,1.0_s)),
+    std::move(AutoBalanceCommand{&m_drive,2}),
+    frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}));
+
+    // return &ramseteCommand;
 }
 
-// frc2::RamseteCommand* RobotContainer::GetMoveBackCommand() {
-//   fs::path deployDirectory = frc::filesystem::GetDeployDirectory();
-//   deployDirectory = deployDirectory / "paths" / "BlueMoveBack.wpilib.json";
-//   frc::Trajectory trajectory = frc::TrajectoryUtil::FromPathweaverJson(deployDirectory.string());
+frc2::Command* RobotContainer::GetScoreMobilityRoutine() {
+  fs::path deployDirectory = frc::filesystem::GetDeployDirectory();
+  deployDirectory = deployDirectory / "paths" / "MoveMobility.wpilib.json";
+  frc::Trajectory trajectory = frc::TrajectoryUtil::FromPathweaverJson(deployDirectory.string());
 
-//   m_drive.ResetOdometry(trajectory.InitialPose());
 
-// // frc2::RamseteCommand ram{}
-//   frc2::RamseteCommand ramseteCommand{
-//       trajectory,
-//       [this]() { return m_drive.GetPose(); },
-//       frc::RamseteController{AutoConstants::kRamseteB,
-//                              AutoConstants::kRamseteZeta},
-//       frc::SimpleMotorFeedforward<units::meters>{
-//           DriveConstants::ks, DriveConstants::kv, DriveConstants::ka},
-//       DriveConstants::kDriveKinematics,
-//       [this] { return m_drive.GetWheelSpeeds(); },
-//       frc2::PIDController{DriveConstants::kPDriveVel, 0, 0},
-//       frc2::PIDController{DriveConstants::kPDriveVel, 0, 0},
-//       [this](auto left, auto right) { m_drive.TankDriveVolts(left, right); },
-//       {&m_drive}};
+// frc2::RamseteCommand ram{}
+  frc2::RamseteCommand ramseteCommand{
+      trajectory,
+      [this]() { return m_drive.GetPose(); },
+      frc::RamseteController{AutoConstants::kRamseteB,
+                             AutoConstants::kRamseteZeta},
+      frc::SimpleMotorFeedforward<units::meters>{
+          DriveConstants::ks, DriveConstants::kv, DriveConstants::ka},
+      DriveConstants::kDriveKinematics,
+      [this] { return m_drive.GetWheelSpeeds(); },
+      frc2::PIDController{DriveConstants::kPDriveVel, 0, 0},
+      frc2::PIDController{DriveConstants::kPDriveVel, 0, 0},
+      [this](auto left, auto right) { m_drive.TankDriveVolts(left, right); },
+      {&m_drive}};
 
-//     return &ramseteCommand;
-// }
+  m_drive.ResetOdometry(trajectory.InitialPose());
+      
+      return new frc2::SequentialCommandGroup(
+        std::move(IntakeSpeedCommand(&m_intake, 1, 1)),
+        std::move(ramseteCommand),
+        frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}));
+
+    // return &ramseteCommand;
+}
+
+frc2::Command* RobotContainer::GetMobilityRoutine() {
+  fs::path deployDirectory = frc::filesystem::GetDeployDirectory();
+  deployDirectory = deployDirectory / "paths" / "MoveMobility.wpilib.json";
+  frc::Trajectory trajectory = frc::TrajectoryUtil::FromPathweaverJson(deployDirectory.string());
+
+
+// frc2::RamseteCommand ram{}
+  frc2::RamseteCommand ramseteCommand{
+      trajectory,
+      [this]() { return m_drive.GetPose(); },
+      frc::RamseteController{AutoConstants::kRamseteB,
+                             AutoConstants::kRamseteZeta},
+      frc::SimpleMotorFeedforward<units::meters>{
+          DriveConstants::ks, DriveConstants::kv, DriveConstants::ka},
+      DriveConstants::kDriveKinematics,
+      [this] { return m_drive.GetWheelSpeeds(); },
+      frc2::PIDController{DriveConstants::kPDriveVel, 0, 0},
+      frc2::PIDController{DriveConstants::kPDriveVel, 0, 0},
+      [this](auto left, auto right) { m_drive.TankDriveVolts(left, right); },
+      {&m_drive}};
+      
+  m_drive.ResetOdometry(trajectory.InitialPose());
+
+  return new frc2::SequentialCommandGroup(
+    std::move(ramseteCommand),
+    frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}));
+
+    // return &ramseteCommand;
+}
+
+void RobotContainer::Feed() {
+  m_drive.Feed();
+}
