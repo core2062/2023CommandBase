@@ -15,7 +15,7 @@ AutoBalanceCommand::AutoBalanceCommand(DriveSubsystem* driveSubsystem, int stage
 //   } else if (m_stage == 2) {
 //     kP = 0.01;
 //   }
-  kP = 0.02;
+  kP = 0.015;
   kI = 0;
   kD = 0;
 }
@@ -49,7 +49,7 @@ void AutoBalanceCommand::Execute() {
     frc::SmartDashboard::PutNumber("Balance Speed",motorSpeed);
     if (m_stage == 1)
     {
-        m_driveSubsystem->ArcadeDrive(motorSpeed*0.6,0);
+        m_driveSubsystem->ArcadeDrive(motorSpeed*0.75,0);
     }
     else if(m_stage == 2)
     {
@@ -60,7 +60,7 @@ void AutoBalanceCommand::Execute() {
             motorSpeed -= 0.04;
         }
         
-        m_driveSubsystem->ArcadeDrive(motorSpeed*0.8,0);
+        m_driveSubsystem->ArcadeDrive(motorSpeed*0.6,0);
     }
 }
 
