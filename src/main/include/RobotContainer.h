@@ -60,6 +60,7 @@ class RobotContainer {
   frc2::Command* GetScoreMobilityRoutine();
   frc2::Command* GetTheWholeShabang();
 
+  void SetArcadeDriveSpeedModifier(double speed);
   void Feed();
  private:
   // The driver's controller
@@ -85,7 +86,6 @@ class RobotContainer {
   frc::SendableChooser<Autons> m_chooser2;
   
   
-
 
   void ConfigureButtonBindings();
   

@@ -21,7 +21,7 @@ AutoBalanceCommand::AutoBalanceCommand(DriveSubsystem* driveSubsystem, int stage
 }
 
 void AutoBalanceCommand::Initialize() {
-    // m_driveSubsystem->SetDriveSpeedModifier(1);
+    m_driveSubsystem->SetDriveSpeedModifier(1);
     std::cout << "beginning to balance" << std::endl;
     m_driveSubsystem->SetMaxOutput(0.25);
     m_driveSubsystem->SetNeutralMode(NeutralMode::Brake);
@@ -66,13 +66,12 @@ void AutoBalanceCommand::Execute() {
 }
 
 bool AutoBalanceCommand::IsFinished() {
-    if (isCommandFinished == true) {
-        // m_driveSubsystem->SetDriveSpeedModifier(0.75);
+    if (isCommandFinished == true || m_balancePIDController.AtSetpoint()) {
+        m_driveSubsystem->SetDriveSpeedModifier(0.75);
         std::cout<<"is finished"<< std::endl;  
         return true;
     } else
     {
-        // m_driveSubsystem->SetDriveSpeedModifier(0.75);
         std::cout<<"is finished"<< std::endl;  
         return m_balancePIDController.AtSetpoint();
     }

@@ -75,7 +75,9 @@ void DriveSubsystem::Periodic() {
 }
 
 void DriveSubsystem::ArcadeDrive(double fwd, double rot) {
-  m_drive.ArcadeDrive(fwd, rot, false);
+  m_fwd2 = fwd * m_driveMod;
+  m_rot2 = rot * m_driveMod;
+  m_drive.ArcadeDrive(m_fwd2, m_rot2, false);
 }
 
 void DriveSubsystem::TankDriveVolts(units::volt_t left, units::volt_t right) {
@@ -150,6 +152,10 @@ units::meter_t DriveSubsystem::NativeUnitsToDistanceMeters(double sensorCounts){
 
 double DriveSubsystem::GetAngle() {
   return m_gyro.GetRoll();
+}
+
+void DriveSubsystem::SetDriveSpeedModifier(double mod) {
+  m_driveMod = mod;
 }
 
 //TODO: Implement pref. to select NavX type

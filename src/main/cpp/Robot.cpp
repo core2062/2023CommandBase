@@ -56,6 +56,7 @@ void Robot::TeleopInit() {
     m_autonomousCommand = nullptr;
   }
   // m_drive.SetNeutralMode(NeutralMode::Brake);
+  m_container.SetArcadeDriveSpeedModifier(0.75);
   m_compressor.EnableDigital();
   std::cout << "TeleopInit" << std::endl;
 }

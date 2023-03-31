@@ -148,6 +148,13 @@ class DriveSubsystem : public frc2::SubsystemBase {
   */
   bool IsLevel();
 
+  /**
+   * Sets the drive speed modifier
+   * 
+   * @param mod the new speed modifier
+  */
+ void SetDriveSpeedModifier(double mod);
+
   void Feed();
 
  private:
@@ -190,4 +197,6 @@ class DriveSubsystem : public frc2::SubsystemBase {
   frc::DifferentialDriveOdometry m_odometry;
 
   // Compressor m_compressor;
+
+  double m_fwd2, m_rot2, m_driveMod;
 };
