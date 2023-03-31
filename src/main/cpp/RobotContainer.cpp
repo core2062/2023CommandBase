@@ -32,6 +32,7 @@ RobotContainer::RobotContainer() {
   m_chooser2.AddOption("Mobility", Autons::MOBILITY);
   m_chooser2.AddOption("Score Balance", Autons::SCORE_AUTOBALANCE);
   m_chooser2.AddOption("Score Mobility", Autons::SCORE_MOBILITY);
+  m_chooser2.AddOption("The Whole Shabang", Autons::THE_WHOLE_SHABANG);
   frc::SmartDashboard::PutData("Autonomous 2",&m_chooser2);
 
   // Configure the button bindings
@@ -166,6 +167,9 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
     break;
   case Autons::MOBILITY:
     return GetMobilityRoutine();
+    break;
+  case Autons::THE_WHOLE_SHABANG:
+    return GetTheWholeShabang();
     break;
   default:
     return new frc2::SequentialCommandGroup(frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}));
@@ -368,6 +372,59 @@ frc2::Command* RobotContainer::GetMobilityRoutine() {
     frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}));
 
     // return &ramseteCommand;
+}
+
+frc2::Command* RobotContainer::GetTheWholeShabang() {
+  fs::path deployDirectory = frc::filesystem::GetDeployDirectory();
+  deployDirectory = deployDirectory / "paths" / "MoveMobilityToBalance.wpilib.json";
+  frc::Trajectory trajectory = frc::TrajectoryUtil::FromPathweaverJson(deployDirectory.string());
+
+
+// frc2::RamseteCommand ram{}
+  frc2::RamseteCommand ramseteCommand{
+      trajectory,
+      [this]() { return m_drive.GetPose(); },
+      frc::RamseteController{AutoConstants::kRamseteB,
+                             AutoConstants::kRamseteZeta},
+      frc::SimpleMotorFeedforward<units::meters>{
+          DriveConstants::ks, DriveConstants::kv, DriveConstants::ka},
+      DriveConstants::kDriveKinematics,
+      [this] { return m_drive.GetWheelSpeeds(); },
+      frc2::PIDController{DriveConstants::kPDriveVel, 0, 0},
+      frc2::PIDController{DriveConstants::kPDriveVel, 0, 0},
+      [this](auto left, auto right) { m_drive.TankDriveVolts(left, right); },
+      {&m_drive}};
+      
+  m_drive.ResetOdometry(trajectory.InitialPose());
+
+  deployDirectory = frc::filesystem::GetDeployDirectory();
+  deployDirectory = deployDirectory / "paths" / "MobilityToBalance.wpilib.json";
+  frc::Trajectory trajectory2 = frc::TrajectoryUtil::FromPathweaverJson(deployDirectory.string());
+
+  frc2::RamseteCommand ramseteCommand2{
+      trajectory2,
+      [this]() { return m_drive.GetPose(); },
+      frc::RamseteController{AutoConstants::kRamseteB,
+                             AutoConstants::kRamseteZeta},
+      frc::SimpleMotorFeedforward<units::meters>{
+          DriveConstants::ks, DriveConstants::kv, DriveConstants::ka},
+      DriveConstants::kDriveKinematics,
+      [this] { return m_drive.GetWheelSpeeds(); },
+      frc2::PIDController{DriveConstants::kPDriveVel, 0, 0},
+      frc2::PIDController{DriveConstants::kPDriveVel, 0, 0},
+      [this](auto left, auto right) { m_drive.TankDriveVolts(left, right); },
+      {&m_drive}};
+
+  return new frc2::SequentialCommandGroup(
+    std::move(IntakeSpeedCommand(&m_intake, 1, 1)),
+    std::move(ramseteCommand),
+    frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}),
+    std::move(ramseteCommand2),
+    frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}),
+    std::move(AutoBalanceCommand{&m_drive,1}),
+    std::move(DelayCommand(&m_drive,1.0_s)),
+    std::move(AutoBalanceCommand{&m_drive,2}),
+    frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}));
 }
 
 void RobotContainer::Feed() {

@@ -34,7 +34,8 @@ enum class Autons {
   AUTOBALANCE,
   MOBILITY,
   SCORE_AUTOBALANCE,
-  SCORE_MOBILITY
+  SCORE_MOBILITY,
+  THE_WHOLE_SHABANG
 };
 
 /**
@@ -52,11 +53,12 @@ class RobotContainer {
 
   frc2::Command* GetRamseteCommand(string filename);
 
-  frc2::Command* GetScoreBalanceRoutine();
   frc2::Command* GetAutoBalanceRoutine();
+  frc2::Command* GetMobilityRoutine();
+  frc2::Command* GetScoreBalanceRoutine();
   frc2::Command* GetAutoBalanceRoutine2();
   frc2::Command* GetScoreMobilityRoutine();
-  frc2::Command* GetMobilityRoutine();
+  frc2::Command* GetTheWholeShabang();
 
   void Feed();
  private:
