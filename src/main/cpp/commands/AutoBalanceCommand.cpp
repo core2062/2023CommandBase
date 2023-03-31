@@ -21,6 +21,7 @@ AutoBalanceCommand::AutoBalanceCommand(DriveSubsystem* driveSubsystem, int stage
 }
 
 void AutoBalanceCommand::Initialize() {
+    // m_driveSubsystem->SetDriveSpeedModifier(1);
     std::cout << "beginning to balance" << std::endl;
     m_driveSubsystem->SetMaxOutput(0.25);
     m_driveSubsystem->SetNeutralMode(NeutralMode::Brake);
@@ -28,7 +29,7 @@ void AutoBalanceCommand::Initialize() {
     m_balancePIDController.SetSetpoint(0);
     if (m_stage == 1)
     {
-        m_balancePIDController.SetTolerance(3);
+        m_balancePIDController.SetTolerance(4);
         isCommandFinished = false;
     }
     else if(m_stage == 2)
@@ -54,10 +55,10 @@ void AutoBalanceCommand::Execute() {
     else if(m_stage == 2)
     {
         if(motorSpeed>0) {
-            motorSpeed += 0.04;
+            motorSpeed += 0.02;
         } else if (motorSpeed < 0)
         {
-            motorSpeed -= 0.04;
+            motorSpeed -= 0.02 ;
         }
         
         m_driveSubsystem->ArcadeDrive(motorSpeed*0.6,0);
@@ -66,10 +67,12 @@ void AutoBalanceCommand::Execute() {
 
 bool AutoBalanceCommand::IsFinished() {
     if (isCommandFinished == true) {
+        // m_driveSubsystem->SetDriveSpeedModifier(0.75);
         std::cout<<"is finished"<< std::endl;  
         return true;
     } else
     {
+        // m_driveSubsystem->SetDriveSpeedModifier(0.75);
         std::cout<<"is finished"<< std::endl;  
         return m_balancePIDController.AtSetpoint();
     }
