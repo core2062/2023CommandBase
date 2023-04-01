@@ -27,12 +27,12 @@ RobotContainer::RobotContainer() {
   // m_chooser.AddOption("Score Mobility Routine", GetScoreMobilityRoutine());
   // frc::SmartDashboard::PutData("Autonomous", &m_chooser); 
 
-  m_chooser2.SetDefaultOption("Do Nothing", Autons::DO_NOTHING);
+  m_chooser2.AddOption("Do Nothing", Autons::DO_NOTHING);
   m_chooser2.AddOption("Auto Balance", Autons::AUTOBALANCE);
   m_chooser2.AddOption("Mobility", Autons::MOBILITY);
   m_chooser2.AddOption("Score Balance", Autons::SCORE_AUTOBALANCE);
   m_chooser2.AddOption("Score Mobility", Autons::SCORE_MOBILITY);
-  m_chooser2.AddOption("The Whole Shabang", Autons::THE_WHOLE_SHABANG);
+  m_chooser2.SetDefaultOption("The Whole Shabang", Autons::THE_WHOLE_SHABANG);
   frc::SmartDashboard::PutData("Autonomous 2",&m_chooser2);
 
   // Configure the button bindings
