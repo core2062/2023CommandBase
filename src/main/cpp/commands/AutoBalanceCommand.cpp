@@ -67,7 +67,7 @@ void AutoBalanceCommand::Execute() {
 
 bool AutoBalanceCommand::IsFinished() {
     if (isCommandFinished == true || m_balancePIDController.AtSetpoint()) {
-        m_driveSubsystem->SetDriveSpeedModifier(0.75);
+        m_driveSubsystem->SetDriveSpeedModifier(0.8);
         std::cout<<"is finished"<< std::endl;  
         return true;
     } else

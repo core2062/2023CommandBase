@@ -82,7 +82,7 @@ void RobotContainer::ConfigureButtonBindings() {
     .OnTrue(new IntakeSpeedCommand(&m_intake,1)); // Score high
 
   frc2::JoystickButton(&m_operatorController,6) // RB
-    .OnTrue(new IntakeSpeedCommand(&m_intake,-0.25)); // Intake in
+    .OnTrue(new IntakeSpeedCommand(&m_intake,-0.50)); // Intake in
 
   // frc2::JoystickButton{&m_driverController,1}
   // .OnTrue(new DriveCommand(&m_drive,-1));
@@ -429,4 +429,8 @@ frc2::Command* RobotContainer::GetTheWholeShabang() {
 
 void RobotContainer::Feed() {
   m_drive.Feed();
+}
+
+void RobotContainer::SetArcadeDriveSpeedModifier(double speed) {
+  m_drive.SetDriveSpeedModifier(speed);
 }
