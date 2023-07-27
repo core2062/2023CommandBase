@@ -27,6 +27,14 @@ RobotContainer::RobotContainer() {
   // m_chooser.AddOption("Score Mobility Routine", GetScoreMobilityRoutine());
   // frc::SmartDashboard::PutData("Autonomous", &m_chooser); 
 
+  // m_chooser.SetDefaultOption("Set Comp Speed", SetCompDriveSpeed());
+  // m_chooser.AddOption("Set Demo Speed", SetDemoDriveSpeed());
+  // frc::SmartDashboard::PutData("Speed Selector", &m_chooser);
+
+  m_chooser.AddOption("Set Comp Speed", SpeedOptions::COMP_SPEED);
+  m_chooser.AddOption("Set Demo Speed", SpeedOptions::DEMO_SPEED);
+  frc::SmartDashboard::PutData("Drive Speed Option", &m_chooser);
+
   m_chooser2.AddOption("Do Nothing", Autons::DO_NOTHING);
   m_chooser2.AddOption("Auto Balance", Autons::AUTOBALANCE);
   m_chooser2.AddOption("Mobility", Autons::MOBILITY);
@@ -153,6 +161,17 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
   
   // return m_chooser.GetSelected();
 
+  SpeedOptions speedChoice = m_chooser.GetSelected();
+  switch(speedChoice)
+  {
+  case SpeedOptions::COMP_SPEED:
+    return SetCompDriveSpeed();
+    break;
+  case SpeedOptions::DEMO_SPEED:
+    return SetDemoDriveSpeed();
+    break;
+  }
+
   Autons choice = m_chooser2.GetSelected();
   switch (choice)
   {
@@ -175,6 +194,17 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
     return new frc2::SequentialCommandGroup(frc2::InstantCommand([this] { m_drive.TankDriveVolts(0_V, 0_V); }, {}));
     break;
   }
+
+}
+
+frc2::Command* RobotContainer::SetCompDriveSpeed() {
+  std::cout << "Setting Comp Drive Speed" << endl;
+  SetArcadeDriveSpeedModifier(0.8);
+}
+
+frc2::Command* RobotContainer::SetDemoDriveSpeed() {
+  std::cout << "Setting Comp Drive Speed" << endl;
+  SetArcadeDriveSpeedModifier(0.3);
 }
 
 

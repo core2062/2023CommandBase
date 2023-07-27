@@ -38,6 +38,11 @@ enum class Autons {
   THE_WHOLE_SHABANG
 };
 
+enum class SpeedOptions {
+  COMP_SPEED,
+  DEMO_SPEED
+};
+
 /**
  * This class is where the bulk of the robot should be declared.  Since
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -52,6 +57,9 @@ class RobotContainer {
   frc2::Command* GetAutonomousCommand();
 
   frc2::Command* GetRamseteCommand(string filename);
+
+  frc2::Command* SetCompDriveSpeed();
+  frc2::Command* SetDemoDriveSpeed();
 
   frc2::Command* GetAutoBalanceRoutine();
   frc2::Command* GetMobilityRoutine();
@@ -82,9 +90,8 @@ class RobotContainer {
   frc2::InstantCommand m_intakePositionToggle{[this] { m_intake.ToggleIntakeSolenoid(); },
                                               {}};
   // The chooser for the autonomous routines
-  frc::SendableChooser<frc2::Command*> m_chooser;
+  frc::SendableChooser<SpeedOptions> m_chooser;
   frc::SendableChooser<Autons> m_chooser2;
-  
   
 
   void ConfigureButtonBindings();
